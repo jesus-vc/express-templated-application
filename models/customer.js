@@ -78,6 +78,13 @@ class Customer {
       );
     }
   }
+
+  //** property to get full name */
+
+  get fullName() {
+    return `${this.firstName} ${this.lastName}`;
+  }
+  
 }
 
 module.exports = Customer;
