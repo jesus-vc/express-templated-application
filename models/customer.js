@@ -53,6 +53,25 @@ class Customer {
     return new Customer(customer);
   }
 
+  //** get a customer ID by name */
+
+  static async getCustomerID(firstName,lastName) {
+
+    const customerID = await db.query(
+      `SELECT id
+        FROM customers WHERE first_name = $1 AND last_name = $2`,
+      [firstName,lastName]
+    );
+   
+    if (customerID.rows[0] === undefined) {
+      const err = new Error(`No such customer: ${firstName} ${lastName}.`);
+      err.status = 404;
+      throw err;
+    }
+    return customerID.rows[0].id;
+
+  }
+
   /** get all reservations for this customer. */
 
   async getReservations() {

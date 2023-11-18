@@ -28,6 +28,16 @@ router.get("/add/", async function(req, res, next) {
   }
 });
 
+/** Show a customer, given their name. */
+router.get("/searchCustomers/", async function (req,res,next) {
+  try {
+    const customerID = await Customer.getCustomerID(req.query.firstName, req.query.lastName)
+    return res.redirect(`/${customerID}/`);
+  } catch (err) {
+    return next(err);
+  }
+});
+
 /** Handle adding a new customer. */
 
 router.post("/add/", async function(req, res, next) {
@@ -51,11 +61,7 @@ router.post("/add/", async function(req, res, next) {
 router.get("/:id/", async function(req, res, next) {
   try {
     const customer = await Customer.get(req.params.id);
-    // console.log(customer);
-    // console.log(customer.fullName);
-    // const newdata = await customer.fullName();
-    // customer.fullName = await customer.fullName();
-    // console.log(customer);
+  
     const reservations = await customer.getReservations();
 
     return res.render("customer_detail.html", { customer, reservations });
