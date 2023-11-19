@@ -16,8 +16,6 @@ class Reservation {
     this.notes = notes;
   }
 
-  //TODO would save new reservation, use static, instance or get/set methods? 
-
   /** formatter for startAt */
 
   getformattedStartAt() {

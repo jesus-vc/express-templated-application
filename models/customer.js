@@ -6,12 +6,13 @@ const Reservation = require("./reservation");
 /** Customer of the restaurant. */
 
 class Customer {
-  constructor({ id, firstName, lastName, phone, notes }) {
+  constructor({ id, firstName, lastName, phone, notes,totalReservations }) {
     this.id = id;
     this.firstName = firstName;
     this.lastName = lastName;
     this.phone = phone;
     this.notes = notes;
+    this.totalReservations = totalReservations;
   }
 
   /** find all customers. */
@@ -25,6 +26,20 @@ class Customer {
          notes
        FROM customers
        ORDER BY last_name, first_name`
+    );
+    return results.rows.map(c => new Customer(c));
+  }
+
+  /** find top 10 customers by reservation count. */
+
+  static async top10() {
+    const results = await db.query(
+      `SELECT customer_id,first_name AS "firstName",last_name AS "lastName",COUNT(reservations.id) AS "totalReservations"
+      FROM reservations
+      JOIN customers ON customer_id=customers.id
+      GROUP BY customer_id,first_name,last_name
+      ORDER BY COUNT(reservations.id)
+      DESC limit 10`
     );
     return results.rows.map(c => new Customer(c));
   }
